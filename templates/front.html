@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<form method="post">
+    {% if user %}
+    <input type="submit" name="newpost-button" value="New Post">
+    <h2 class="error">
+        {{error}}
+    </h2>
+    {% endif %}
+</form>
+
+  {% for p in posts %}
+    {{ p.render() | safe }}
+
+        <form action="/blog/{{p.key().id()}}" >
+            <input type="submit" value="View Post">
+        </form>
+        <br>
+
+
+  {% endfor %}
+
+{% endblock %}
+

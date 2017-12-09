@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+
+{% block content %}
+  {{post.render() | safe}}
+  <br>
+  {% for c in post.comments %}
+    <h5 class="comment_content">"{{c.comment_content}}"</h5>
+    <h6>- {{c.comment_author}}</h6>
+    {% if user.name == c.comment_author %}
+    <form method="post">
+        <a class="edit_comment" href="/blog/{{post.key().id()}}/EditComment/{{c.key().id()}}">Edit Comment</a>
+        <a class="delete_comment" href="/blog/{{post.key().id()}}/DeleteComment/{{c.key().id()}}">Delete Comment</a>
+        <input type="hidden" value="{{c.key().id()}}" name="hidden">
+    </form>
+    <br>
+    {% endif %}
+    <br>
+    <br>
+  {% endfor %}
+
+<form>
+{% if user.name == post.author %}
+    <input type="submit" name="delete-button" value="Delete Post" formaction='/blog/delete/{{post.key().id()}}'>
+    <input type="submit" name="edit-button" value="Edit Post" formaction='/blog/edit/{{post.key().id()}}'>
+{% endif %}
+</form>
+
+<form method="post">
+    {% if user and user.name != post.author %}
+            {% if user.name not in post.liked %}
+        <a class="like" href="/blog/votes/{{post.key().id()}}">Like</a>
+            {% else %}
+        <a class="like" href="/blog/votes/{{post.key().id()}}">Unlike</a>
+            {% endif %}
+    {% endif %}
+</form>
+
+<div class="post-error">
+    <h2>
+    {{error}}
+    </h2>
+</div>
+
+<form method="post">
+    {% if user %}
+    <textarea name="comment_content">{{comment_content}}</textarea>
+    <input type="submit" value="Post Comment" name="comment_button">
+    <br>
+    {% endif %}
+</form>
+
+
+
+
+{% endblock %}
